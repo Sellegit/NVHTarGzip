@@ -47,14 +47,14 @@
 
 - (BOOL)unTarGzipFileAtPath:(NSString*)sourcePath toPath:(NSString*)destinationPath error:(NSError**)error {
     NSString* cachePath = [self cacheFilePathForSource:sourcePath];
-    NSProgress* progress = [NSProgress progressWithTotalUnitCount:2];
-    [progress becomeCurrentWithPendingUnitCount:1];
+    //NSProgress* progress = [NSProgress progressWithTotalUnitCount:2];
+    //[progress becomeCurrentWithPendingUnitCount:1];
     [self unGzipFileAtPath:sourcePath toPath:cachePath error:error];
-    [progress resignCurrent];
+    //[progress resignCurrent];
     if (*error != nil) {
         return NO;
     }
-    [progress becomeCurrentWithPendingUnitCount:1];
+    //[progress becomeCurrentWithPendingUnitCount:1];
     [self unTarFileAtPath:cachePath toPath:destinationPath error:error];
     NSError* removeCacheError = nil;
     [[NSFileManager defaultManager] removeItemAtPath:cachePath error:&removeCacheError];
@@ -65,7 +65,7 @@
         *error = removeCacheError;
         return NO;
     }
-    [progress resignCurrent];
+    //[progress resignCurrent];
     return YES;
 }
 
@@ -82,19 +82,19 @@
 
 - (void)unTarGzipFileAtPath:(NSString*)sourcePath toPath:(NSString*)destinationPath completion:(void(^)(NSError*))completion {
     NSString* cachePath = [self cacheFilePathForSource:sourcePath];
-    NSProgress* progress = [NSProgress progressWithTotalUnitCount:2];
-    [progress becomeCurrentWithPendingUnitCount:1];
+    //NSProgress* progress = [NSProgress progressWithTotalUnitCount:2];
+    //[progress becomeCurrentWithPendingUnitCount:1];
     [self unGzipFileAtPath:sourcePath toPath:cachePath completion:^(NSError* gzipError) {
-        [progress resignCurrent];
+        //[progress resignCurrent];
         if (gzipError != nil) {
             completion(gzipError);
             return;
         }
-        [progress becomeCurrentWithPendingUnitCount:1];
+        //[progress becomeCurrentWithPendingUnitCount:1];
         [self unTarFileAtPath:cachePath toPath:destinationPath completion:^(NSError* tarError) {
             NSError* error = nil;
             [[NSFileManager defaultManager] removeItemAtPath:cachePath error:&error];
-            [progress resignCurrent];
+            //[progress resignCurrent];
             if (tarError != nil) {
                 error = tarError;
             }
